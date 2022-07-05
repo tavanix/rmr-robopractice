@@ -1,5 +1,5 @@
-// import React, { useState, useEffect } from 'react'
-// import data from './data.json'
+import { useState, useEffect } from 'react'
+import data from './data.json'
 
 // import Table from '@mui/material/Table'
 // import TableBody from '@mui/material/TableBody'
@@ -99,10 +99,6 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
-// import IconButton from '@mui/material/IconButton'
-// import Switch from '@mui/material/Switch'
-// import DeleteIcon from '@mui/icons-material/Delete'
-// import FilterListIcon from '@mui/icons-material/FilterList'
 import { visuallyHidden } from '@mui/utils'
 
 function createData(name, calories, fat, carbs, protein) {
@@ -284,12 +280,12 @@ EnhancedTableToolbar.propTypes = {
 }
 
 export default function EnhancedTable() {
-    const [order, setOrder] = React.useState('asc')
-    const [orderBy, setOrderBy] = React.useState('calories')
-    const [selected, setSelected] = React.useState([])
-    const [page, setPage] = React.useState(0)
-    const [dense, setDense] = React.useState(false)
-    const [rowsPerPage, setRowsPerPage] = React.useState(5)
+    const [order, setOrder] = useState('asc')
+    const [orderBy, setOrderBy] = useState('calories')
+    const [selected, setSelected] = useState([])
+    const [page, setPage] = useState(0)
+    const [dense, setDense] = useState(false)
+    const [rowsPerPage, setRowsPerPage] = useState(5)
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc'
@@ -326,9 +322,9 @@ export default function EnhancedTable() {
         setPage(0)
     }
 
-    const handleChangeDense = (event) => {
-        setDense(event.target.checked)
-    }
+    // const handleChangeDense = (event) => {
+    //     setDense(event.target.checked)
+    // }
 
     const isSelected = (name) => selected.indexOf(name) !== -1
 
@@ -336,92 +332,116 @@ export default function EnhancedTable() {
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
 
-    return (
-        <Box sx={{ width: '100%' }}>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
-                <TableContainer>
-                    <Table
-                        sx={{ minWidth: 750 }}
-                        aria-labelledby='tableTitle'
-                        size={dense ? 'small' : 'medium'}
-                    >
-                        <EnhancedTableHead
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
-                        />
-                        <TableBody>
-                            {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
-                            {stableSort(rows, getComparator(order, orderBy))
-                                .slice(
-                                    page * rowsPerPage,
-                                    page * rowsPerPage + rowsPerPage
-                                )
-                                .map((row, index) => {
-                                    const isItemSelected = isSelected(row.name)
-                                    const labelId = `id-${index}`
+    // DATA API
+    const [users, setUsers] = useState([])
+    const url = 'http://localhost:8080/api/users'
 
-                                    return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event) =>
-                                                handleClick(event, row.name)
-                                            }
-                                            role='checkbox'
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
-                                            key={row.name}
-                                            selected={isItemSelected}
-                                        >
-                                            <TableCell
-                                                component='th'
-                                                id={labelId}
-                                                scope='row'
-                                                padding='none'
-                                            >
-                                                {row.name}
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {row.calories}
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {row.fat}
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {row.carbs}
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {row.protein}
-                                            </TableCell>
-                                        </TableRow>
+    const getUsers = async () => {
+        const response = await fetch(url)
+        const users = await response.json()
+        setUsers(users)
+    }
+
+    useEffect(() => {
+        getUsers()
+    }, [])
+
+    return (
+        <>
+            {users.map((user) => {
+                const { id, name = user.Fullname } = user
+                return <p key={id}>{name}</p>
+            })}
+
+            <Box sx={{ width: '100%' }}>
+                <Paper sx={{ width: '100%', mb: 2 }}>
+                    <EnhancedTableToolbar numSelected={selected.length} />
+                    <TableContainer>
+                        <Table
+                            sx={{ minWidth: 750 }}
+                            aria-labelledby='tableTitle'
+                            size={dense ? 'small' : 'medium'}
+                        >
+                            <EnhancedTableHead
+                                numSelected={selected.length}
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort}
+                                rowCount={rows.length}
+                            />
+                            <TableBody>
+                                {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+                 rows.slice().sort(getComparator(order, orderBy)) */}
+                                {stableSort(rows, getComparator(order, orderBy))
+                                    .slice(
+                                        page * rowsPerPage,
+                                        page * rowsPerPage + rowsPerPage
                                     )
-                                })}
-                            {emptyRows > 0 && (
-                                <TableRow
-                                    style={{
-                                        height: (dense ? 33 : 53) * emptyRows,
-                                    }}
-                                >
-                                    <TableCell colSpan={6} />
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component='div'
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-            </Paper>
-        </Box>
+                                    .map((row, index) => {
+                                        const isItemSelected = isSelected(
+                                            row.name
+                                        )
+                                        const labelId = `id-${index}`
+
+                                        return (
+                                            <TableRow
+                                                hover
+                                                onClick={(event) =>
+                                                    handleClick(event, row.name)
+                                                }
+                                                role='checkbox'
+                                                aria-checked={isItemSelected}
+                                                tabIndex={-1}
+                                                key={row.name}
+                                                selected={isItemSelected}
+                                            >
+                                                <TableCell
+                                                    component='th'
+                                                    id={labelId}
+                                                    scope='row'
+                                                    padding='none'
+                                                >
+                                                    {row.name}
+                                                </TableCell>
+                                                <TableCell align='right'>
+                                                    {row.calories}
+                                                </TableCell>
+                                                <TableCell align='right'>
+                                                    {row.fat}
+                                                </TableCell>
+                                                <TableCell align='right'>
+                                                    {row.carbs}
+                                                </TableCell>
+                                                <TableCell align='right'>
+                                                    {row.protein}
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    })}
+                                {emptyRows > 0 && (
+                                    <TableRow
+                                        style={{
+                                            height:
+                                                (dense ? 33 : 53) * emptyRows,
+                                        }}
+                                    >
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component='div'
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </Paper>
+            </Box>
+        </>
     )
 }
