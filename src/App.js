@@ -19,10 +19,10 @@ export default function App() {
 
     return (
         <>
-            {users.map((user) => {
+            {/* {users.map((user) => {
                 const { id, name = user.Fullname } = user
                 return <p key={id}>{name}</p>
-            })}
+            })} */}
             <DataTable users={users} />
         </>
     )
