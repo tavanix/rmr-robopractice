@@ -6,20 +6,56 @@ import Box from '@mui/material/Box'
 import { visuallyHidden } from '@mui/utils'
 import PropTypes from 'prop-types'
 
-const headCells = [
-    {
-        id: 'name',
-        numeric: false,
-        disablePadding: false,
-        label: 'User',
-    },
-    {
-        id: 'id',
-        numeric: true,
-        disablePadding: false,
-        label: 'User ID',
-    },
+const headerValues = [
+    'User',
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    'Monthly',
 ]
+
+function generateHeader(arr) {
+    let result = ''
+    result = arr.map((item) => {
+        return {
+            id: item,
+            numeric: typeof item == 'number' ? true : false,
+            disablePadding: false,
+            label: item,
+        }
+    })
+    return result
+}
+
+const headCells = generateHeader(headerValues)
 
 EnhancedTableHead.propTypes = {
     onRequestSort: PropTypes.func.isRequired,

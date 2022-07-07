@@ -1,4 +1,4 @@
-function timeDiffCalc(endTime, startTime) {
+export default function timeDiffCalc(endTime, startTime) {
     let diffInMilliSeconds =
         Math.abs(new Date(endTime) - new Date(startTime)) / 1000
 
@@ -12,5 +12,3 @@ function timeDiffCalc(endTime, startTime) {
 
     return `${hours}:${minutes}`
 }
-
-export default timeDiffCalc

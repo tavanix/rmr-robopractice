@@ -17,13 +17,5 @@ export default function App() {
         getUsers()
     }, [])
 
-    return (
-        <>
-            {/* {users.map((user) => {
-                const { id, name = user.Fullname } = user
-                return <p key={id}>{name}</p>
-            })} */}
-            <DataTable users={users} />
-        </>
-    )
+    return <DataTable users={users} />
 }

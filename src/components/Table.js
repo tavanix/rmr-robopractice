@@ -27,18 +27,6 @@ function getComparator(order, orderBy) {
         : (a, b) => -descendingComparator(a, b, orderBy)
 }
 
-function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index])
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0])
-        if (order !== 0) {
-            return order
-        }
-        return a[1] - b[1]
-    })
-    return stabilizedThis.map((el) => el[0])
-}
-
 function DataTable({ users }) {
     const [order, setOrder] = useState('asc')
     const [orderBy, setOrderBy] = useState('User')
@@ -61,12 +49,45 @@ function DataTable({ users }) {
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0
 
+    const monthsDays = [
+        '01',
+        '02',
+        '03',
+        '04',
+        '05',
+        '06',
+        '07',
+        '08',
+        '09',
+        '10',
+        '11',
+        '12',
+        '13',
+        '14',
+        '15',
+        '16',
+        '17',
+        '18',
+        '19',
+        '20',
+        '21',
+        '22',
+        '23',
+        '24',
+        '25',
+        '26',
+        '27',
+        '28',
+        '29',
+        '30',
+        '31',
+    ]
+
     return (
         <>
-            {timeDiffCalc('2021-05-01 14:43', '2021-05-01 13:35')}
             <h1>Users in Social Media Activity Report</h1>
-            <Box sx={{ width: '70%' }}>
-                <Paper sx={{ width: '50%', mb: 2 }}>
+            <Box sx={{ width: '100%' }}>
+                <Paper sx={{ width: '100%', mb: 2 }}>
                     <TableContainer sx={{ maxHeight: 550 }}>
                         <Table
                             sx={{ minWidth: 550 }}
@@ -80,10 +101,9 @@ function DataTable({ users }) {
                                 rowCount={users.length}
                             />
                             <TableBody>
-                                {stableSort(
-                                    users,
-                                    getComparator(order, orderBy)
-                                )
+                                {users
+                                    .slice()
+                                    .sort(getComparator(order, orderBy))
                                     .slice(
                                         page * rowsPerPage,
                                         page * rowsPerPage + rowsPerPage
@@ -103,12 +123,44 @@ function DataTable({ users }) {
                                                 >
                                                     {user.Fullname}
                                                 </TableCell>
-                                                <TableCell align='right'>
-                                                    {user.id}
-                                                </TableCell>
+
+                                                {user.Days.map((day, index) => {
+                                                    const startTime =
+                                                        day.Date +
+                                                        ' ' +
+                                                        day.Start.replace(
+                                                            '-',
+                                                            ':'
+                                                        )
+                                                    const endTime =
+                                                        day.Date +
+                                                        ' ' +
+                                                        day.End.replace(
+                                                            '-',
+                                                            ':'
+                                                        )
+
+                                                    let currentDay =
+                                                        day.Date.split('-')[2]
+
+                                                    return (
+                                                        <TableCell
+                                                            key={
+                                                                day.Date + index
+                                                            }
+                                                            align='right'
+                                                        >
+                                                            {timeDiffCalc(
+                                                                endTime,
+                                                                startTime
+                                                            )}
+                                                        </TableCell>
+                                                    )
+                                                })}
                                             </TableRow>
                                         )
                                     })}
+
                                 {emptyRows > 0 && (
                                     <TableRow
                                         style={{
