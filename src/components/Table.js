@@ -1,32 +1,15 @@
 import * as React from 'react'
 import { useState } from 'react'
-import PropTypes from 'prop-types'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
-import TableSortLabel from '@mui/material/TableSortLabel'
 import Paper from '@mui/material/Paper'
-import { visuallyHidden } from '@mui/utils'
-
-const headCells = [
-    {
-        id: 'name',
-        numeric: false,
-        disablePadding: false,
-        label: 'User',
-    },
-    {
-        id: 'id',
-        numeric: true,
-        disablePadding: false,
-        label: 'User ID',
-    },
-]
+import timeDiffCalc from '../utils'
+import EnhancedTableHead from './TableHead'
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -56,49 +39,6 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0])
 }
 
-EnhancedTableHead.propTypes = {
-    onRequestSort: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    orderBy: PropTypes.string.isRequired,
-}
-
-function EnhancedTableHead(props) {
-    const { order, orderBy, onRequestSort } = props
-    const createSortHandler = (property) => (event) => {
-        onRequestSort(event, property)
-    }
-
-    return (
-        <TableHead>
-            <TableRow>
-                {headCells.map((headCell) => (
-                    <TableCell
-                        key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
-                        padding={headCell.disablePadding ? 'none' : 'normal'}
-                        sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                        <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
-                        >
-                            {headCell.label}
-                            {orderBy === headCell.id ? (
-                                <Box component='span' sx={visuallyHidden}>
-                                    {order === 'desc'
-                                        ? 'sorted descending'
-                                        : 'sorted ascending'}
-                                </Box>
-                            ) : null}
-                        </TableSortLabel>
-                    </TableCell>
-                ))}
-            </TableRow>
-        </TableHead>
-    )
-}
-
 function DataTable({ users }) {
     const [order, setOrder] = useState('asc')
     const [orderBy, setOrderBy] = useState('User')
@@ -123,11 +63,16 @@ function DataTable({ users }) {
 
     return (
         <>
+            {timeDiffCalc('2021-05-01 14:43', '2021-05-01 13:35')}
             <h1>Users in Social Media Activity Report</h1>
-            <Box sx={{ width: '80%' }}>
-                <Paper sx={{ width: '70%', mb: 2 }}>
-                    <TableContainer>
-                        <Table sx={{ minWidth: 500 }} size={'small'}>
+            <Box sx={{ width: '70%' }}>
+                <Paper sx={{ width: '50%', mb: 2 }}>
+                    <TableContainer sx={{ maxHeight: 550 }}>
+                        <Table
+                            sx={{ minWidth: 550 }}
+                            size={'small'}
+                            stickyHeader
+                        >
                             <EnhancedTableHead
                                 order={order}
                                 orderBy={orderBy}
@@ -145,12 +90,16 @@ function DataTable({ users }) {
                                     )
                                     .map((user) => {
                                         return (
-                                            <TableRow hover key={user.Fullname}>
+                                            <TableRow
+                                                hover
+                                                role='checkbox'
+                                                key={user.id}
+                                            >
                                                 <TableCell
                                                     component='th'
                                                     id={user.id}
                                                     scope='row'
-                                                    paddingLeft='5px'
+                                                    padding='normal'
                                                 >
                                                     {user.Fullname}
                                                 </TableCell>
@@ -163,10 +112,10 @@ function DataTable({ users }) {
                                 {emptyRows > 0 && (
                                     <TableRow
                                         style={{
-                                            height: 30 * emptyRows,
+                                            height: 33 * emptyRows,
                                         }}
                                     >
-                                        <TableCell colSpan={5} />
+                                        <TableCell colSpan={6} />
                                     </TableRow>
                                 )}
                             </TableBody>
