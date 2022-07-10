@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import timeDiffCalc from '../utils'
 
 const headerValues = [
@@ -42,6 +42,8 @@ const headerValues = [
 
 export default function UsersDataGrid() {
     console.clear()
+    const [pageSize, setPageSize] = useState(10)
+
     // DATA API
     const [users, setUsers] = useState([])
     const url = 'http://localhost:8080/api/users'
@@ -62,7 +64,8 @@ export default function UsersDataGrid() {
             return {
                 field: 'Field' + item,
                 headerName: item,
-                width: item === 'User' || item === 'Monthly' ? 140 : 85,
+                headerClassName: 'header',
+                width: item === 'User' ? 140 : item === 'Monthly' ? 125 : 85,
             }
         })
         return header
@@ -117,13 +120,18 @@ export default function UsersDataGrid() {
     }
 
     return (
-        <Box sx={{ height: 400, width: '100%' }}>
+        <Box sx={{ height: 685, width: '100%', m: 1 }}>
             <DataGrid
                 columns={renderHeaders(headerValues)}
                 rows={renderRows(users, headerValues)}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pageSize={pageSize}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                rowsPerPageOptions={[5, 10, 25]}
+                pagination
                 disableSelectionOnClick
+                components={{
+                    Toolbar: GridToolbar,
+                }}
             />
         </Box>
     )
