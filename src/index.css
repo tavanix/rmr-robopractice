@@ -14,11 +14,13 @@ code {
 }
 
 h1 {
+    font-size: 20px;
     margin-top: 0;
     color: rgb(74, 103, 203);
 }
 
 h2 {
+    font-size: 18px;
     color: rgb(54, 53, 53);
 }
 
