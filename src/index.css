@@ -13,7 +13,16 @@ code {
         monospace;
 }
 
+h1 {
+    margin-top: 0;
+    color: rgb(74, 103, 203);
+}
+
+h2 {
+    color: rgb(54, 53, 53);
+}
+
 .header {
-    background-color: rgb(185, 199, 237);
-    color: rgb(50, 50, 50);
+    background-color: rgb(141, 168, 237);
+    color: rgb(54, 53, 53);
 }

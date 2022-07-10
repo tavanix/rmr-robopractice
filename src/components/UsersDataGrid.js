@@ -41,7 +41,6 @@ const headerValues = [
 ]
 
 export default function UsersDataGrid() {
-    console.clear()
     const [pageSize, setPageSize] = useState(10)
 
     // DATA API
@@ -65,7 +64,7 @@ export default function UsersDataGrid() {
                 field: 'Field' + item,
                 headerName: item,
                 headerClassName: 'header',
-                width: item === 'User' ? 140 : item === 'Monthly' ? 125 : 85,
+                width: item === 'User' ? 150 : item === 'Monthly' ? 125 : 85,
             }
         })
         return header
@@ -119,15 +118,16 @@ export default function UsersDataGrid() {
         return rows
     }
 
+    // RETURN COMPONENT FOR RENDER
     return (
-        <Box sx={{ height: 685, width: '100%', m: 1 }}>
+        <Box sx={{ height: 685, width: '100%' }}>
             <DataGrid
                 columns={renderHeaders(headerValues)}
                 rows={renderRows(users, headerValues)}
-                pageSize={pageSize}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                rowsPerPageOptions={[5, 10, 25]}
                 pagination
+                pageSize={pageSize}
+                rowsPerPageOptions={[5, 10, 25]}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 disableSelectionOnClick
                 components={{
                     Toolbar: GridToolbar,

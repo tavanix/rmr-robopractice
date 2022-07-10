@@ -1,8 +1,14 @@
 import * as React from 'react'
-// import { useState, useEffect } from 'react'
-// import DataTable from './components/Table'
-import UsersDataGrid from './components/DataTable'
+import Header from './components/Header'
+import UsersDataGrid from './components/UsersDataGrid'
+import Note from './components/Note'
 
 export default function App() {
-    return <UsersDataGrid />
+    return (
+        <>
+            <Header />
+            <UsersDataGrid />
+            <Note />
+        </>
+    )
 }
