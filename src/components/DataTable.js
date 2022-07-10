@@ -40,9 +40,8 @@ const headerValues = [
     'Monthly',
 ]
 
-const rows = [{ id: 1, User: 'Jon', 1: 45, 2: 2.2 }]
-
 export default function UsersDataGrid() {
+    console.clear()
     // DATA API
     const [users, setUsers] = useState([])
     const url = 'http://localhost:8080/api/users'
@@ -57,35 +56,57 @@ export default function UsersDataGrid() {
         getUsers()
     }, [])
 
-    // PREPARE DATA FOR RENDER
+    // DATA RENDER
     function renderHeaders(array) {
         const result = array.map((item) => {
             return {
-                field: item,
+                field: 'Field' + item,
                 headerName: item,
-                width: item === 'User' || item === 'Monthly' ? 125 : 85,
-                editable: false,
-                // type: item !== 'User' ? 'number' : 'text',
+                width: item === 'User' || item === 'Monthly' ? 140 : 85,
+                // editable: false,
             }
         })
         return result
     }
 
-    function renderRows(array) {
-        const result = array.map((item) => {
-            return {
-                id: item.id,
-                User: item.Fullname,
+    function renderRows(array, headers) {
+        headers = headers.slice(1, headers.length - 1)
+        const rows = array.map((user, index) => {
+            let result = {
+                id: user.id,
+                FieldUser: user.Fullname,
             }
+
+            headers.forEach((headerValue, headerIndex) => {
+                let day = user.Days.find((day) => {
+                    const headerDay = parseInt(headerValue)
+                    const currentDay = parseInt(day.Date.split('-')[2])
+                    return headerDay === currentDay
+                })
+
+                if (day === undefined) {
+                    result[`Field${headerIndex + 1}`] = 0
+                } else {
+                    const startTime =
+                        day.Date + ' ' + day.Start.replace('-', ':')
+                    const endTime = day.Date + ' ' + day.End.replace('-', ':')
+                    result[`Field${headerIndex + 1}`] = timeDiffCalc(
+                        endTime,
+                        startTime
+                    )
+                }
+            })
+
+            return result
         })
-        return result
+        return rows
     }
 
     return (
         <Box sx={{ height: 400, width: '100%' }}>
             <DataGrid
                 columns={renderHeaders(headerValues)}
-                rows={renderRows(users)}
+                rows={renderRows(users, headerValues)}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
                 disableSelectionOnClick
