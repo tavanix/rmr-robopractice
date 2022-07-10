@@ -1,7 +1,9 @@
-In the project directory, you can run:
+To run the app please use: `npm start`
 
-### `npm start`
+***
 
-Runs the app in the development mode.
+##### Look and feel:
 
-I use NPM "concurrently" to spin up both backend (endpoint: http://localhost:8080/api/users) and frontend
+![image](https://user-images.githubusercontent.com/39880369/178161261-e05f6e52-b4ee-4baf-8a9f-3aefd671f901.png)
+
+
