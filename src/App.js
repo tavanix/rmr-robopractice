@@ -8,7 +8,6 @@ export default function App() {
         <>
             <Header />
             <UsersDataGrid />
-            <Note />
         </>
     )
 }
