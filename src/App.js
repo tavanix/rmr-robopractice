@@ -1,11 +1,10 @@
 import * as React from 'react'
-import Header from './components/Header'
 import UsersDataGrid from './components/UsersDataGrid'
 
 export default function App() {
     return (
         <>
-            <Header />
+            <h1>Users activity in social media report</h1>
             <UsersDataGrid />
         </>
     )

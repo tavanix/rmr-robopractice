@@ -8,15 +8,10 @@ body {
     padding: 2rem;
 }
 
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-        monospace;
-}
-
 h1 {
     font-size: 20px;
     margin-top: 0;
-    color: rgb(74, 103, 203);
+    color: rgb(217, 36, 36);
 }
 
 h2 {
@@ -25,6 +20,6 @@ h2 {
 }
 
 .header {
-    background-color: rgb(141, 168, 237);
-    color: rgb(54, 53, 53);
+    background-color: rgb(217, 36, 36);
+    color: white;
 }
